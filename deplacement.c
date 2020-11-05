@@ -11,6 +11,12 @@
  * @param c, le caractère à convertir
  * @return
  */
+
+int convLigne(int i)
+{
+    return i-1;
+}
+
 int convCharToInt(char c)
 {
     int i;
@@ -59,15 +65,93 @@ int convCharToInt(char c)
     return i;
 }
 
-void saisie(tabDamier td)
+void saisie(tabDamier td, bool jo)
 {
-    int x;
-    char y;
-    printf("Coordonnee ligne du pion a placer ?");
-    scanf("%d", &x);
-    printf("Coordonnee colonne du pion a placer ?");
-    scanf("%c", y);
+    int x, y;
+    char yc;
+    bool valide = false;
+    while(!valide)
+    {
+        printf("Coordonnee ligne du pion a placer ? ");
+        scanf("%d", &x);
+        printf("Coordonnee colonne du pion a placer ? ");
+        scanf("%c", yc);
+        x = convLigne(x);
+        y = convCharToInt(yc);
+        printf("Case voulue => Ligne %d, colonne %d", x, y);
+        // Vérification que la case sélectionnée n'est pas en dehors du plateau
+        if( (x < 0) || (x > 8) || (y < 0 ) || (y > 8) )
+        {
+            printf("Coordonnees en dehors du plateau, veuillez choisir d'autres coordonnees !\n");
+            printf("Appuyez sur une touche pour continuer...");
+            system("pause");
+            system("clear");
+        }
+        // On considère que la case sélectionnée est valide, maintenant il faut vérifier qu'on puisse placer le pion
+        else
+        {
+            // Détection de la prise en sandwich
+            // Si pas de prise en sandwich, on redemande nouvelles coordonnees
+        }
 
+    }
+}
+
+bool priseSandwich(tabDamier td, int x, int y, bool jo)
+{
+    int i = x, j = y;
+    /**
+     * Ligne
+     */
+    // Gauche
+    for(; j > 0; j--)
+    {
+        if(td[i][j] == ' ')
+        {
+            break;
+        }
+    }
+    // Droite
+    for(; j < 8; j++)
+    {
+        if(td[i][j] == ' ')
+        {
+            break;
+        }
+    }
+    /**
+     * Colonne
+     */
+     // Haut
+    for(; i > 0; i--)
+    {
+        if(td[i][j] == ' ')
+        {
+            break;
+        }
+    }
+    // Bas
+    for(; i < 8; i++)
+    {
+        if(td[i][j] == ' ')
+        {
+            break;
+        }
+    }
+    /**
+     * Diagonale
+     */
+     //Bas-Gauche
+     for(; i > 0; i--)
+     {
+         for(; j > 0; j--)
+         {
+             if(td[i][j] == ' ')
+             {
+                 break;
+             }
+         }
+     }
 }
 
 /**
@@ -81,34 +165,39 @@ void deplacerPion(tabDamier td, int departx, int departy, bool joueur)
 {
     int arriveex, arriveey, i, j, k;
     char arriveey1, typePiece;
-    printf("Coordonne ligne ?");
-    scanf("%d", &arriveex);
-    printf("Coordonnee colonne ? ");
-    scanf(" %c", arriveey1);
-    /*
-    if (arriveex==9&&arriveey1=='z')
+    bool valide = false;
+    while(!valide)
     {
-        typePiece=saisie(t,&departx,&departy,joueur);
-    }
-    */
-    arriveey = convCharToInt(arriveey1);
-    k=detectionDame(t,departx,departy,arriveex,arriveey,joueur);
-    while (k==0){
-        printf("coordonnees incorrectes , veuillez en saisir de nouvelles\n");
-        printf("Veuillez saisir la colonne et la ligne de l'endroit ou vous souhaitez deplacer votre Dame\n");
-        scanf(" %c",&arriveey1);
-        scanf("%d",&arriveex);
-        if (arriveex==9&&arriveey1=='z'){
+        printf("Coordonne ligne ?");
+        scanf("%d", &arriveex);
+        printf("Coordonnee colonne ? ");
+        scanf(" %c", arriveey1);
+        /*
+        if (arriveex==9&&arriveey1=='z')
+        {
             typePiece=saisie(t,&departx,&departy,joueur);
         }
-        arriveey=conversion(arriveey1);
-        arriveex =conversionChiffre(arriveex);
+        */
+        arriveey = convCharToInt(arriveey1);
         k=detectionDame(t,departx,departy,arriveex,arriveey,joueur);
+        while (k==0){
+            printf("coordonnees incorrectes , veuillez en saisir de nouvelles\n");
+            printf("Veuillez saisir la colonne et la ligne de l'endroit ou vous souhaitez deplacer votre Dame\n");
+            scanf(" %c",&arriveey1);
+            scanf("%d",&arriveex);
+            if (arriveex==9&&arriveey1=='z'){
+                typePiece=saisie(t,&departx,&departy,joueur);
+            }
+            arriveey=conversion(arriveey1);
+            arriveex =conversionChiffre(arriveex);
+            k=detectionDame(t,departx,departy,arriveex,arriveey,joueur);
+        }
+        t[departx][departy].nomPiece='0';  /// a la sortie de la boucle remplace la precedente place du cavalier par ' ' et a la nouvelle place remplace par le cavalier
+        t[departx][departy].couleur='0';
+        t[arriveex][arriveey].nomPiece='D';
+        t[arriveex][arriveey].couleur=joueur;
     }
-    t[departx][departy].nomPiece='0';  /// a la sortie de la boucle remplace la precedente place du cavalier par ' ' et a la nouvelle place remplace par le cavalier
-    t[departx][departy].couleur='0';
-    t[arriveex][arriveey].nomPiece='D';
-    t[arriveex][arriveey].couleur=joueur;
+
 }
 
 /**
