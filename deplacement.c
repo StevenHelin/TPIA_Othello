@@ -4,6 +4,18 @@
 
 #include "header.h"
 
+bool detectionLigne(tabDamier td, char jo, int x, int y);
+bool detectionColonne(tabDamier td, char jo, int x, int y);
+
+/**
+ * Met à jour la ligne souhaitée
+ * @param i, ligne voulue par l'utilisateur
+ * @return
+ */
+int convLigne(int i)
+{
+    return i - 1;
+}
 
 /**
  * Fonction qui convertie un caractère en entier
@@ -11,12 +23,6 @@
  * @param c, le caractère à convertir
  * @return
  */
-
-int convLigne(int i)
-{
-    return i-1;
-}
-
 int convCharToInt(char c)
 {
     int i;
@@ -65,7 +71,7 @@ int convCharToInt(char c)
     return i;
 }
 
-void saisie(tabDamier td, bool jo)
+void saisie(tabDamier td, char jo)
 {
     int x, y;
     char yc;
@@ -87,319 +93,268 @@ void saisie(tabDamier td, bool jo)
             system("pause");
             system("clear");
         }
-        // On considère que la case sélectionnée est valide, maintenant il faut vérifier qu'on puisse placer le pion
+        // Vérification que la case sélectionnée n'est pas occupée
+        else if(td[x][y].couleur != ' ')
+        {
+            printf("Case déjà remplie, veuillez choisir d'autres coordonnees !\n");
+            printf("Appuyez sur une touche pour continuer...");
+            system("pause");
+            system("clear");
+        }
+        // Vérification des prises pour bien valider le pion
+        else if( (!detectionLigne(td, jo, x, y) ) && (!detectionColonne(td, jo, x, y) ) )
+        {
+            printf("Aucune prise possible, veuillez choisir d'autres coordonnees !\n");
+            printf("Appuyez sur une touche pour continuer...");
+            system("pause");
+            system("clear");
+        }
         else
         {
-            // Détection de la prise en sandwich
-            // Si pas de prise en sandwich, on redemande nouvelles coordonnees
+            valide = true;
         }
 
     }
 }
 
-bool priseSandwich(tabDamier td, int x, int y, bool jo)
+/* ----- DETECTION LIGNE ----- */
+
+/**
+ * Regarde à gauche si on peut prendre sur cette ligne
+ * @param td
+ * @param jo
+ * @param x
+ * @param y
+ * @return
+ */
+bool detectionLigneG(tabDamier td, char jo, int x, int y)
 {
-    int i = x, j = y;
-    /**
-     * Ligne
-     */
-    // Gauche
+    int j = y;
+    if(j < 0)
+    {
+        return false;
+    }
     for(; j > 0; j--)
     {
-        if(td[i][j] == ' ')
+        if(td[x][j].couleur == ' ')
         {
-            break;
+            return false;
+        }
+        else if(td[x][j].couleur != jo)
+        {
+            continue;
+        }
+        else
+        {
+            return true;
         }
     }
-    // Droite
+}
+
+/**
+ * Regarde à droite si on peut prendre sur cette ligne
+ * @param td
+ * @param jo
+ * @param x
+ * @param y
+ * @return
+ */
+bool detectionLigneD(tabDamier td, char jo, int x, int y)
+{
+    int j = y;
+    if(j > 7)
+    {
+        return false;
+    }
     for(; j < 8; j++)
     {
-        if(td[i][j] == ' ')
+        if(td[x][j].couleur == ' ')
         {
-            break;
+            return false;
+        }
+        if(td[x][j].couleur != jo)
+        {
+            continue;
+        }
+        else
+        {
+            return true;
         }
     }
-    /**
-     * Colonne
-     */
-     // Haut
+}
+
+/**
+ * Détecte si il y a une possibilité de prendre sur la ligne
+ * @param td
+ * @param jo
+ * @param x
+ * @param y
+ * @return
+ */
+bool detectionLigne(tabDamier td, char jo, int x, int y)
+{
+    // Vérifier à droite et à gauche s'il n'y a pas d'espace vide OU si le pion à côté n'est pas de la même couleur
+    switch(y)
+    {
+        // Extrémité gauche
+        case 0:
+        {
+            if( (td[x][y + 1].couleur == ' ') || (td[x][y + 1].couleur == jo) || (!detectionLigneD(td, jo, x, y + 2) ) )
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        // Extrémité droite
+        case 7:
+        {
+            if( (td[x][y - 1].couleur == ' ') || (td[x][y - 1].couleur == jo) || (!detectionLigneG(td, jo, x, y - 2) ) )
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        // Entre 1 et 6
+        default:
+        {
+            if( ( ( (td[x][y + 1].couleur == ' ') || (td[x][y + 1].couleur == jo) ) && ( (td[x][y - 1].couleur == ' ') || (td[x][y - 1].couleur == jo) ) )
+            || ( (!detectionLigneD(td, jo, x, y + 2) ) || (!detectionLigneG(td, jo, x, y - 2) ) ) )
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }
+}
+
+/* ----- DETECTION LIGNE ----- */
+
+/* ----- DETECTION COLONNE ----- */
+
+/**
+ * Détecte s'il y a possibilité de prendre en haut
+ * @param td
+ * @param jo
+ * @param x
+ * @param y
+ * @return
+ */
+bool detectionColonneH(tabDamier td, char jo, int x, int y)
+{
+    int i = x;
+    if(i < 0)
+    {
+        return false;
+    }
     for(; i > 0; i--)
     {
-        if(td[i][j] == ' ')
+        if(td[i][y].couleur == ' ')
         {
-            break;
+            return false;
+        }
+        else if(td[i][y].couleur != jo)
+        {
+            continue;
+        }
+        else
+        {
+            return true;
         }
     }
-    // Bas
+}
+
+/**
+ * Détecte s'il y a possibilité de prendre en bas
+ * @param td
+ * @param jo
+ * @param x
+ * @param y
+ * @return
+ */
+bool detectionColonneB(tabDamier td, char jo, int x, int y)
+{
+    int i = x;
+    if(i > 8)
+    {
+        return false;
+    }
     for(; i < 8; i++)
     {
-        if(td[i][j] == ' ')
+        if(td[i][y].couleur == ' ')
         {
-            break;
+            return false;
+        }
+        else if(td[i][y].couleur != jo)
+        {
+            continue;
+        }
+        else
+        {
+            return true;
         }
     }
-    /**
-     * Diagonale
-     */
-     //Bas-Gauche
-     for(; i > 0; i--)
-     {
-         for(; j > 0; j--)
-         {
-             if(td[i][j] == ' ')
-             {
-                 break;
-             }
-         }
-     }
 }
 
 /**
- * Procédure permettant le déplacement d'un pion blanc ou noir
- * @param td, tableau de jeu
- * @param departx, position x (ligne) du pion
- * @param departy, position y (colonne) du pion
- * @param joueur, 0 = IA, 1 = joueur
+ * Détecte si il y a une possibilité de prendre sur la colonne
+ * @param td
+ * @param jo
+ * @param x
+ * @param y
+ * @return
  */
-void deplacerPion(tabDamier td, int departx, int departy, bool joueur)
+bool detectionColonne(tabDamier td, char jo, int x, int y)
 {
-    int arriveex, arriveey, i, j, k;
-    char arriveey1, typePiece;
-    bool valide = false;
-    while(!valide)
+    // Vérifier en haut et en bas s'il n'y a pas d'espace vide OU si le pion n'est pas de la même couleur
+    switch(y)
     {
-        printf("Coordonne ligne ?");
-        scanf("%d", &arriveex);
-        printf("Coordonnee colonne ? ");
-        scanf(" %c", arriveey1);
-        /*
-        if (arriveex==9&&arriveey1=='z')
+        // Extrémité haut
+        case 0:
         {
-            typePiece=saisie(t,&departx,&departy,joueur);
-        }
-        */
-        arriveey = convCharToInt(arriveey1);
-        k=detectionDame(t,departx,departy,arriveex,arriveey,joueur);
-        while (k==0){
-            printf("coordonnees incorrectes , veuillez en saisir de nouvelles\n");
-            printf("Veuillez saisir la colonne et la ligne de l'endroit ou vous souhaitez deplacer votre Dame\n");
-            scanf(" %c",&arriveey1);
-            scanf("%d",&arriveex);
-            if (arriveex==9&&arriveey1=='z'){
-                typePiece=saisie(t,&departx,&departy,joueur);
+            if( (td[x + 1][y].couleur == ' ') || (td[x + 1][y].couleur == jo) || (!detectionColonneB(td, jo, x + 2, y) ) )
+            {
+                return false;
             }
-            arriveey=conversion(arriveey1);
-            arriveex =conversionChiffre(arriveex);
-            k=detectionDame(t,departx,departy,arriveex,arriveey,joueur);
+            else
+            {
+                return true;
+            }
         }
-        t[departx][departy].nomPiece='0';  /// a la sortie de la boucle remplace la precedente place du cavalier par ' ' et a la nouvelle place remplace par le cavalier
-        t[departx][departy].couleur='0';
-        t[arriveex][arriveey].nomPiece='D';
-        t[arriveex][arriveey].couleur=joueur;
+        // Extrémité bas
+        case 7:
+        {
+            if( (td[x - 1][y].couleur == ' ') || (td[x - 1][y].couleur == jo) || (!detectionColonneH(td, jo, x - 2, y) ) )
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        // Entre 1 et 6
+        default:
+        {
+            if( ( ( (td[x + 1][y].couleur == ' ') || (td[x + 1][y].couleur == jo) ) && ( (td[x][y - 1].couleur == ' ') || (td[x][y - 1].couleur == jo) ) )
+                || ( (!detectionColonneB(td, jo, x + 2, y) ) || (!detectionColonneH(td, jo, x - 2, y) ) ) )
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
-
 }
 
-/**
-int detectionDame(Piece **t,int departx,int departy,int arriveex,int arriveey,char joueur){
-   int i,j,k,echec,*xR,*yR,*xA,*yA;
-   Piece**Echiquiertest;
-   i=departx;
-   j=departy;
-   if (arriveey==departy&&arriveex==departx){
-       return 0;
-   }
-   if (arriveex!=departx&&arriveey==departy){
-       if (arriveex>departx){
-           for (k=1;i+k<arriveex;k++){
-               if(t[i+k][j].couleur!='0'){
-                   return 0;
-               }
-           }
-           if (t[arriveex][arriveey].couleur!=joueur){
-               Echiquiertest=copierJeu(t);
-               Echiquiertest[arriveex][arriveey].nomPiece='D';
-               Echiquiertest[arriveex][arriveey].couleur=joueur;
-               Echiquiertest[departx][departy].nomPiece='0';
-               Echiquiertest[departx][departy].couleur='0';
-               echec=detectionEchec(Echiquiertest,joueur,&xR,&yR,&xA,&yA);
-               if (echec==0){
-                   return 1;
-               }else{
-                   return 0;
-               }
-           }
-           else {
-               return 0;
-           }
-       }
-       if (arriveex<departx){
-           for (k=1;i-k>arriveex;k++){
-               if(t[i-k][j].couleur!='0'){
-                   return 0;
-               }
-           }
-           if (t[arriveex][arriveey].couleur!=joueur){
-               Echiquiertest=copierJeu(t);
-               Echiquiertest[arriveex][arriveey].nomPiece='D';
-               Echiquiertest[arriveex][arriveey].couleur=joueur;
-               Echiquiertest[departx][departy].nomPiece='0';
-               Echiquiertest[departx][departy].couleur='0';
-               echec=detectionEchec(Echiquiertest,joueur,&xR,&yR,&xA,&yA);
-               if (echec==0){
-                   return 1;
-               }else{
-                   return 0;
-               }
-           }
-           else {
-               return 0;
-           }
-       }
-   }
-   if (arriveex==departx&&arriveey!=departy){
-       if (arriveey>departy){
-           for(k=1;k+i<arriveey;k++){
-               if (t[i][j+k].couleur!='0'){
-                   return 0;
-               }
-           }
-           if (t[arriveex][arriveey].couleur!=joueur){
-               Echiquiertest=copierJeu(t);
-               Echiquiertest[arriveex][arriveey].nomPiece='D';
-               Echiquiertest[arriveex][arriveey].couleur=joueur;
-               Echiquiertest[departx][departy].nomPiece='0';
-               Echiquiertest[departx][departy].couleur='0';
-               echec=detectionEchec(Echiquiertest,joueur,&xR,&yR,&xA,&yA);
-               if (echec==0){
-                   return 1;
-               }else{
-                   return 0;
-               }
-           }
-           else{
-               return 0;
-           }
-       }
-       if (arriveey<departy){
-           for(k=1;k-i>arriveey;k++){
-               if(t[i][j-k].couleur!='0'){
-                   return 0;
-               }
-           }
-           if(t[arriveex][arriveey].couleur!=joueur){
-               Echiquiertest=copierJeu(t);
-               Echiquiertest[arriveex][arriveey].nomPiece='D';
-               Echiquiertest[arriveex][arriveey].couleur=joueur;
-               Echiquiertest[departx][departy].nomPiece='0';
-               Echiquiertest[departx][departy].couleur='0';
-               echec=detectionEchec(Echiquiertest,joueur,&xR,&yR,&xA,&yA);
-               if (echec==0){
-                   return 1;
-               }else{
-                   return 0;
-               }
-           }
-           else{
-               return 0;
-           }
-       }
-   }
-   if((arriveex<0)||(arriveex>7)||(arriveey<0)||(arriveey>7)){
-       return 0;}
-
-   if (arriveex>departx&&arriveey>departy){
-       for (k=1;i+k<arriveex;k++){
-           if(t[i+k][j+k].couleur!='0'){
-               return 0;
-           }
-       }
-       if (t[arriveex][arriveey].couleur!=joueur){
-           Echiquiertest=copierJeu(t);
-           Echiquiertest[arriveex][arriveey].nomPiece='D';
-           Echiquiertest[arriveex][arriveey].couleur=joueur;
-           Echiquiertest[departx][departy].nomPiece='0';
-           Echiquiertest[departx][departy].couleur='0';
-           echec=detectionEchec(Echiquiertest,joueur,&xR,&yR,&xA,&yA);
-           if (echec==0){
-               return 1;
-           }else{
-               return 0;
-           }
-       }
-       else {
-           return 0;
-       }
-   }
-   if (arriveex>departx&&arriveey<departy){
-       for (k=1;i+k<arriveex;k++){
-           if(t[i+k][j-k].couleur!='0'){
-               return 0;
-           }
-       }
-       if (t[arriveex][arriveey].couleur!=joueur){
-           Echiquiertest=copierJeu(t);
-           Echiquiertest[arriveex][arriveey].nomPiece='D';
-           Echiquiertest[arriveex][arriveey].couleur=joueur;
-           Echiquiertest[departx][departy].nomPiece='0';
-           Echiquiertest[departx][departy].couleur='0';
-           echec=detectionEchec(Echiquiertest,joueur,&xR,&yR,&xA,&yA);
-           if (echec==0){
-               return 1;
-           }else{
-               return 0;
-           }
-       }
-       else {
-           return 0;
-       }
-   }
-   if (arriveex<departx&&arriveey<departy){
-       for (k=1;i-k>arriveex;k++){
-           if(t[i-k][j-k].couleur!='0'){
-               return 0;
-           }
-       }
-       if (t[arriveex][arriveey].couleur!=joueur){
-           Echiquiertest=copierJeu(t);
-           Echiquiertest[arriveex][arriveey].nomPiece='D';
-           Echiquiertest[arriveex][arriveey].couleur=joueur;
-           Echiquiertest[departx][departy].nomPiece='0';
-           Echiquiertest[departx][departy].couleur='0';
-           echec=detectionEchec(Echiquiertest,joueur,&xR,&yR,&xA,&yA);
-           if (echec==0){
-               return 1;
-           }else{
-               return 0;
-           }
-       }
-       else {
-           return 0;
-       }
-   }
-   if (arriveex<departx&&arriveey>departy){
-       for (k=1;i-k>arriveex;k++){
-           if(t[i-k][j+k].couleur!='0'){
-               return 0;
-           }
-       }
-       if (t[arriveex][arriveey].couleur!=joueur){
-           Echiquiertest=copierJeu(t);
-           Echiquiertest[arriveex][arriveey].nomPiece='D';
-           Echiquiertest[arriveex][arriveey].couleur=joueur;
-           Echiquiertest[departx][departy].nomPiece='0';
-           Echiquiertest[departx][departy].couleur='0';
-           echec=detectionEchec(Echiquiertest,joueur,&xR,&yR,&xA,&yA);
-           if (echec==0){
-               return 1;
-           }else{
-               return 0;
-           }
-       }
-       else {
-           return 0;
-       }
-   }
-}
-
-**/
+/* ----- DETECTION COLONNE ----- */

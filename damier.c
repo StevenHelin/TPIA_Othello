@@ -21,18 +21,18 @@ void iniDamier(tabDamier td)
                         //d
                         case 3:
                         {
-                           td[i][j] = 'B';
+                           td[i][j].couleur = 'B';
                            break;
                         }
                         //e
                         case 4:
                         {
-                            td[i][j] = 'N';
+                            td[i][j].couleur = 'N';
                             break;
                         }
                         default:
                         {
-                            td[i][j] = ' ';
+                            td[i][j].couleur = ' ';
                         }
                     }
                     break;
@@ -45,25 +45,25 @@ void iniDamier(tabDamier td)
                         //d
                         case 3:
                         {
-                            td[i][j] = 'N';
+                            td[i][j].couleur = 'N';
                             break;
                         }
                         //e
                         case 4:
                         {
-                            td[i][j] = 'B';
+                            td[i][j].couleur = 'B';
                             break;
                         }
                         default:
                         {
-                            td[i][j] = ' ';
+                            td[i][j].couleur = ' ';
                         }
                     }
                     break;
                 }
                 default:
                 {
-                    td[i][j] = ' ';
+                    td[i][j].couleur = ' ';
                 }
             }
         }
@@ -74,7 +74,7 @@ void iniDamier(tabDamier td)
  * Affiche l'ensemble du damier td passé en paramètre
  * @param td, plateau de jeu
  */
-void affichageDamier(tabDamier td) //rajouter un argument -> tableau/matrice
+void affichageDamier(tabDamier td)
 {
     /// on va afficher le tableau de type piece dans cette procedure on appellera la fonction précedente
     int i, j, k;
@@ -87,8 +87,7 @@ void affichageDamier(tabDamier td) //rajouter un argument -> tableau/matrice
         k++;
         for(j = 0; j < 8; j++)
         {
-            //Afficher pion à rajouter
-            printf("%c", td[i][j]);
+            printf("%c", td[i][j].couleur);
             printf(" | ");
         }
         printf("\n");

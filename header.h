@@ -13,7 +13,14 @@
  * tadDamier représente le plateau de jeu de l'Othello
  * Il peut contenir des espaces vides, des pièces noires ou blanches
  */
-typedef char tabDamier[8][8];
+
+typedef struct
+{
+    int score;
+    char couleur;
+} Pion;
+
+typedef Pion tabDamier[8][8];
 
 void iniDamier(tabDamier td);
 void affichageDamier(tabDamier td);
