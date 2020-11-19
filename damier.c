@@ -96,3 +96,5 @@ void affichageDamier(tabDamier td) //rajouter un argument -> tableau/matrice
     printf("   +---+---+---+---+---+---+---+---+\n");
     printf("     a   b   c   d   e   f   g   h\n");
 }
+
+//implementer une fonction de detection de coup possible pour voir si la partie continue

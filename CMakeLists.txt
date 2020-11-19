@@ -3,4 +3,4 @@ project(Othello C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(Othello main.c damier.c header.h deplacement.c)
+add_executable(Othello main.c damier.c header.h deplacement.c IA.c)
