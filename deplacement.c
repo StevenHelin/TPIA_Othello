@@ -4,9 +4,6 @@
 
 #include "header.h"
 
-bool detectionLigne(tabDamier td, char jo, int x, int y);
-bool detectionColonne(tabDamier td, char jo, int x, int y);
-
 /**
  * Met à jour la ligne souhaitée
  * @param i, ligne voulue par l'utilisateur
@@ -63,14 +60,25 @@ int convCharToInt(char c)
             i = 6;
             break;
         }
-        default:
+        case 'h':
         {
             i = 7;
+            break;
+        }
+        default:
+        {
+            i = 8;
         }
     }
     return i;
 }
 
+/**
+ * Procédure de saisie
+ * Vérifie qu'on puisse bien placer le pion sur le damier
+ * @param td
+ * @param jo
+ */
 void saisie(tabDamier td, char jo)
 {
     int x, y;
@@ -78,110 +86,46 @@ void saisie(tabDamier td, char jo)
     bool valide = false;
     while(!valide)
     {
+        affichageDamier(td);
+        printf("Couleur du joueur = %c\n", jo);
         printf("Coordonnee ligne du pion a placer ? ");
         scanf("%d", &x);
         printf("Coordonnee colonne du pion a placer ? ");
-        scanf("%c", yc);
+        scanf(" %c", &yc);
         x = convLigne(x);
         y = convCharToInt(yc);
-        printf("Case voulue => Ligne %d, colonne %d", x, y);
+        printf("Case voulue => Ligne %d, colonne %d\n", x+1, y+1);
         // Vérification que la case sélectionnée n'est pas en dehors du plateau
-        if( (x < 0) || (x > 8) || (y < 0 ) || (y > 8) )
+        if( (x < 0) || (x > 7) || (y < 0 ) || (y > 7) )
         {
             printf("Coordonnees en dehors du plateau, veuillez choisir d'autres coordonnees !\n");
-            printf("Appuyez sur une touche pour continuer...");
             system("pause");
-            system("clear");
+            system("cls");
         }
         // Vérification que la case sélectionnée n'est pas occupée
         else if(td[x][y].couleur != ' ')
         {
-            printf("Case déjà remplie, veuillez choisir d'autres coordonnees !\n");
+            printf("Case deja remplie, veuillez choisir d'autres coordonnees !\n");
             printf("Appuyez sur une touche pour continuer...");
             system("pause");
-            system("clear");
+            system("cls");
         }
         // Vérification des prises pour bien valider le pion
         else if( (!detectionLigne(td, jo, x, y) ) && (!detectionColonne(td, jo, x, y) ) )
         {
             printf("Aucune prise possible, veuillez choisir d'autres coordonnees !\n");
-            printf("Appuyez sur une touche pour continuer...");
             system("pause");
-            system("clear");
+            system("cls");
         }
         else
         {
             valide = true;
+            td[x][y].couleur = jo;
         }
-
     }
 }
 
 /* ----- DETECTION LIGNE ----- */
-
-/**
- * Regarde à gauche si on peut prendre sur cette ligne
- * @param td
- * @param jo
- * @param x
- * @param y
- * @return
- */
-bool detectionLigneG(tabDamier td, char jo, int x, int y)
-{
-    int j = y;
-    if(j < 0)
-    {
-        return false;
-    }
-    for(; j > 0; j--)
-    {
-        if(td[x][j].couleur == ' ')
-        {
-            return false;
-        }
-        else if(td[x][j].couleur != jo)
-        {
-            continue;
-        }
-        else
-        {
-            return true;
-        }
-    }
-}
-
-/**
- * Regarde à droite si on peut prendre sur cette ligne
- * @param td
- * @param jo
- * @param x
- * @param y
- * @return
- */
-bool detectionLigneD(tabDamier td, char jo, int x, int y)
-{
-    int j = y;
-    if(j > 7)
-    {
-        return false;
-    }
-    for(; j < 8; j++)
-    {
-        if(td[x][j].couleur == ' ')
-        {
-            return false;
-        }
-        if(td[x][j].couleur != jo)
-        {
-            continue;
-        }
-        else
-        {
-            return true;
-        }
-    }
-}
 
 /**
  * Détecte si il y a une possibilité de prendre sur la ligne
@@ -193,44 +137,256 @@ bool detectionLigneD(tabDamier td, char jo, int x, int y)
  */
 bool detectionLigne(tabDamier td, char jo, int x, int y)
 {
-    // Vérifier à droite et à gauche s'il n'y a pas d'espace vide OU si le pion à côté n'est pas de la même couleur
+    int i, ii, j, jj;
+    bool valide = false;
     switch(y)
     {
         // Extrémité gauche
         case 0:
         {
-            if( (td[x][y + 1].couleur == ' ') || (td[x][y + 1].couleur == jo) || (!detectionLigneD(td, jo, x, y + 2) ) )
+            // On vérifie si la case à droite n'est pas vide OU n'est pas un pion de la même couleur
+            if(td[x][y+1].couleur == ' ' || td[x][y+1].couleur == jo)
             {
-                return false;
+                printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                system("pause");
+                system("cls");
             }
             else
             {
-                return true;
+                for(j = 2; j < 8; j++)
+                {
+                    // On vérifie qu'il y a bien un pion
+                    if(td[x][j].couleur != ' ')
+                    {
+                        // On vérifie que la couleur du pion est différente du joueur actuel
+                        if(td[x][j].couleur != jo)
+                        {
+                            continue;
+                        }
+                        // La couleur du pion est identique à celui du joueur
+                        else
+                        {
+                            jj = j;
+                            // On met les pions en sandwich de la même couleur que le joueur actuel
+                            for(j = 1; j < jj; j++)
+                            {
+                                td[x][j].couleur = jo;
+                            }
+                            break;
+                        }
+                    }
+                    // Le pion est inoccupé, on ne peut pas faire de prise
+                    else
+                    {
+                        printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                        system("pause");
+                        system("cls");
+                        break;
+                    }
+                }
             }
+            break;
+        }
+        // Colonne 2
+        case 1:
+        {
+            // On vérifie si la case à droite n'est pas vide OU n'est pas un pion de la même couleur
+            if(td[x][y+1].couleur == ' ' || td[x][y+1].couleur == jo)
+            {
+                printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                system("pause");
+                system("cls");
+            }
+            else
+            {
+                for(j = 3; j < 8; j++)
+                {
+                    // On vérifie qu'il y a bien un pion
+                    if(td[x][j].couleur != ' ')
+                    {
+                        // On vérifie que la couleur du pion est différente du joueur actuel
+                        if(td[x][j].couleur != jo)
+                        {
+                            continue;
+                        }
+                            // La couleur du pion est identique à celui du joueur
+                        else
+                        {
+                            jj = j;
+                            // On met les pions en sandwich de la même couleur que le joueur actuel
+                            for(j = 2; j < jj; j++)
+                            {
+                                td[x][j].couleur = jo;
+                            }
+                            break;
+                        }
+                    }
+                        // Le pion est inoccupé, on ne peut pas faire de prise
+                    else
+                    {
+                        printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                        system("pause");
+                        system("cls");
+                        break;
+                    }
+                }
+            }
+            break;
+        }
+        // Colonne 7
+        case 6:
+        {
+            // On vérifie si la case à gauche n'est pas vide OU n'est pas un pion de la même couleur
+            if(td[x][y-1].couleur == ' ' || td[x][y-1].couleur == jo)
+            {
+                printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                system("pause");
+                system("cls");
+            }
+            else
+            {
+                for(j = 4; j > 0; j--)
+                {
+                    // On vérifie qu'il y a bien un pion
+                    if(td[x][j].couleur != ' ')
+                    {
+                        // On vérifie que la couleur du pion est différente du joueur actuel
+                        if(td[x][j].couleur != jo)
+                        {
+                            continue;
+                        }
+                            // La couleur du pion est identique à celui du joueur
+                        else
+                        {
+                            jj = j;
+                            // On met les pions en sandwich de la même couleur que le joueur actuel
+                            for(j = 5; j > jj; j--)
+                            {
+                                td[x][j].couleur = jo;
+                            }
+                            break;
+                        }
+                    }
+                        // Le pion est inoccupé, on ne peut pas faire de prise
+                    else
+                    {
+                        printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                        system("pause");
+                        system("cls");
+                        break;
+                    }
+                }
+            }
+            break;
         }
         // Extrémité droite
         case 7:
         {
-            if( (td[x][y - 1].couleur == ' ') || (td[x][y - 1].couleur == jo) || (!detectionLigneG(td, jo, x, y - 2) ) )
+            // On vérifie si la case à gauche n'est pas vide OU n'est pas un pion de la même couleur
+            if(td[x][y-1].couleur == ' ' || td[x][y-1].couleur == jo)
             {
-                return false;
+                printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                system("pause");
+                system("cls");
             }
             else
             {
-                return true;
+                for(j = 5; j > 0; j--)
+                {
+                    // On vérifie qu'il y a bien un pion
+                    if(td[x][j].couleur != ' ')
+                    {
+                        // On vérifie que la couleur du pion est différente du joueur actuel
+                        if(td[x][j].couleur != jo)
+                        {
+                            continue;
+                        }
+                        // La couleur du pion est identique à celui du joueur
+                        else
+                        {
+                            jj = j;
+                            // On met les pions en sandwich de la même couleur que le joueur actuel
+                            for(j = 6; j > jj; j--)
+                            {
+                                td[x][j].couleur = jo;
+                            }
+                            break;
+                        }
+                    }
+                        // Le pion est inoccupé, on ne peut pas faire de prise
+                    else
+                    {
+                        printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                        system("pause");
+                        system("cls");
+                        break;
+                    }
+                }
             }
+            break;
         }
-        // Entre 1 et 6
+        // Colonnes 3 à 6
         default:
         {
-            if( ( ( (td[x][y + 1].couleur == ' ') || (td[x][y + 1].couleur == jo) ) && ( (td[x][y - 1].couleur == ' ') || (td[x][y - 1].couleur == jo) ) )
-            || ( (!detectionLigneD(td, jo, x, y + 2) ) || (!detectionLigneG(td, jo, x, y - 2) ) ) )
+            // On regarde à gauche
+            for(j = y-1; j > -1; j--)
             {
-                return false;
+                // Si la case est vide, on arrête de vérifier à gauche
+                if(td[x][j].couleur == ' ')
+                {
+                    printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                    system("pause");
+                    system("cls");
+                    break;
+                }
+                else
+                {
+                    // Si le pion n'est de la même couleur, on continue la recherche
+                    if(td[x][j].couleur != jo)
+                    {
+                        continue;
+                    }
+                    // Le pion est de la même couleur, on peut manger à gauche
+                    else
+                    {
+                        jj = j-1;
+                        for(j = y-1; j > jj; j--)
+                        {
+                            td[x][j].couleur = jo;
+                        }
+                        break;
+                    }
+                }
             }
-            else
+            // On regarde à droite
+            for(j = y+1; j < 8; j++)
             {
-                return true;
+                // Si la case est vide, on arrête de vérifier à gauche
+                if(td[x][j].couleur == ' ')
+                {
+                    printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                    system("pause");
+                    system("cls");
+                    break;
+                }
+                else
+                {
+                    // Si le pion n'est de la même couleur, on continue la recherche
+                    if(td[x][j].couleur != jo)
+                    {
+                        continue;
+                    }
+                        // Le pion est de la même couleur, on peut manger à gauche
+                    else
+                    {
+                        jj = j;
+                        for(j = y+1; j < jj; j++)
+                        {
+                            td[x][j].couleur = jo;
+                        }
+                        break;
+                    }
+                }
             }
         }
     }
@@ -239,70 +395,6 @@ bool detectionLigne(tabDamier td, char jo, int x, int y)
 /* ----- DETECTION LIGNE ----- */
 
 /* ----- DETECTION COLONNE ----- */
-
-/**
- * Détecte s'il y a possibilité de prendre en haut
- * @param td
- * @param jo
- * @param x
- * @param y
- * @return
- */
-bool detectionColonneH(tabDamier td, char jo, int x, int y)
-{
-    int i = x;
-    if(i < 0)
-    {
-        return false;
-    }
-    for(; i > 0; i--)
-    {
-        if(td[i][y].couleur == ' ')
-        {
-            return false;
-        }
-        else if(td[i][y].couleur != jo)
-        {
-            continue;
-        }
-        else
-        {
-            return true;
-        }
-    }
-}
-
-/**
- * Détecte s'il y a possibilité de prendre en bas
- * @param td
- * @param jo
- * @param x
- * @param y
- * @return
- */
-bool detectionColonneB(tabDamier td, char jo, int x, int y)
-{
-    int i = x;
-    if(i > 8)
-    {
-        return false;
-    }
-    for(; i < 8; i++)
-    {
-        if(td[i][y].couleur == ' ')
-        {
-            return false;
-        }
-        else if(td[i][y].couleur != jo)
-        {
-            continue;
-        }
-        else
-        {
-            return true;
-        }
-    }
-}
 
 /**
  * Détecte si il y a une possibilité de prendre sur la colonne
@@ -314,44 +406,256 @@ bool detectionColonneB(tabDamier td, char jo, int x, int y)
  */
 bool detectionColonne(tabDamier td, char jo, int x, int y)
 {
-    // Vérifier en haut et en bas s'il n'y a pas d'espace vide OU si le pion n'est pas de la même couleur
-    switch(y)
+    int i, ii;
+    bool valide = false;
+    switch(x)
     {
-        // Extrémité haut
+        // Tout en haut
         case 0:
         {
-            if( (td[x + 1][y].couleur == ' ') || (td[x + 1][y].couleur == jo) || (!detectionColonneB(td, jo, x + 2, y) ) )
+            // On vérifie si la case à droite n'est pas vide OU n'est pas un pion de la même couleur
+            if(td[x][y+1].couleur == ' ' || td[x][y+1].couleur == jo)
             {
-                return false;
+                printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                system("pause");
+                system("cls");
             }
             else
             {
-                return true;
+                for(j = 2; j < 8; j++)
+                {
+                    // On vérifie qu'il y a bien un pion
+                    if(td[x][j].couleur != ' ')
+                    {
+                        // On vérifie que la couleur du pion est différente du joueur actuel
+                        if(td[x][j].couleur != jo)
+                        {
+                            continue;
+                        }
+                            // La couleur du pion est identique à celui du joueur
+                        else
+                        {
+                            jj = j;
+                            // On met les pions en sandwich de la même couleur que le joueur actuel
+                            for(j = 1; j < jj; j++)
+                            {
+                                td[x][j].couleur = jo;
+                            }
+                            break;
+                        }
+                    }
+                        // Le pion est inoccupé, on ne peut pas faire de prise
+                    else
+                    {
+                        printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                        system("pause");
+                        system("cls");
+                        break;
+                    }
+                }
             }
+            break;
         }
-        // Extrémité bas
+            // Colonne 2
+        case 1:
+        {
+            // On vérifie si la case à droite n'est pas vide OU n'est pas un pion de la même couleur
+            if(td[x][y+1].couleur == ' ' || td[x][y+1].couleur == jo)
+            {
+                printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                system("pause");
+                system("cls");
+            }
+            else
+            {
+                for(j = 3; j < 8; j++)
+                {
+                    // On vérifie qu'il y a bien un pion
+                    if(td[x][j].couleur != ' ')
+                    {
+                        // On vérifie que la couleur du pion est différente du joueur actuel
+                        if(td[x][j].couleur != jo)
+                        {
+                            continue;
+                        }
+                            // La couleur du pion est identique à celui du joueur
+                        else
+                        {
+                            jj = j;
+                            // On met les pions en sandwich de la même couleur que le joueur actuel
+                            for(j = 2; j < jj; j++)
+                            {
+                                td[x][j].couleur = jo;
+                            }
+                            break;
+                        }
+                    }
+                        // Le pion est inoccupé, on ne peut pas faire de prise
+                    else
+                    {
+                        printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                        system("pause");
+                        system("cls");
+                        break;
+                    }
+                }
+            }
+            break;
+        }
+            // Colonne 7
+        case 6:
+        {
+            // On vérifie si la case à gauche n'est pas vide OU n'est pas un pion de la même couleur
+            if(td[x][y-1].couleur == ' ' || td[x][y-1].couleur == jo)
+            {
+                printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                system("pause");
+                system("cls");
+            }
+            else
+            {
+                for(j = 4; j > 0; j--)
+                {
+                    // On vérifie qu'il y a bien un pion
+                    if(td[x][j].couleur != ' ')
+                    {
+                        // On vérifie que la couleur du pion est différente du joueur actuel
+                        if(td[x][j].couleur != jo)
+                        {
+                            continue;
+                        }
+                            // La couleur du pion est identique à celui du joueur
+                        else
+                        {
+                            jj = j;
+                            // On met les pions en sandwich de la même couleur que le joueur actuel
+                            for(j = 5; j > jj; j--)
+                            {
+                                td[x][j].couleur = jo;
+                            }
+                            break;
+                        }
+                    }
+                        // Le pion est inoccupé, on ne peut pas faire de prise
+                    else
+                    {
+                        printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                        system("pause");
+                        system("cls");
+                        break;
+                    }
+                }
+            }
+            break;
+        }
+            // Extrémité droite
         case 7:
         {
-            if( (td[x - 1][y].couleur == ' ') || (td[x - 1][y].couleur == jo) || (!detectionColonneH(td, jo, x - 2, y) ) )
+            // On vérifie si la case à gauche n'est pas vide OU n'est pas un pion de la même couleur
+            if(td[x][y-1].couleur == ' ' || td[x][y-1].couleur == jo)
             {
-                return false;
+                printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                system("pause");
+                system("cls");
             }
             else
             {
-                return true;
+                for(j = 5; j > 0; j--)
+                {
+                    // On vérifie qu'il y a bien un pion
+                    if(td[x][j].couleur != ' ')
+                    {
+                        // On vérifie que la couleur du pion est différente du joueur actuel
+                        if(td[x][j].couleur != jo)
+                        {
+                            continue;
+                        }
+                            // La couleur du pion est identique à celui du joueur
+                        else
+                        {
+                            jj = j;
+                            // On met les pions en sandwich de la même couleur que le joueur actuel
+                            for(j = 6; j > jj; j--)
+                            {
+                                td[x][j].couleur = jo;
+                            }
+                            break;
+                        }
+                    }
+                        // Le pion est inoccupé, on ne peut pas faire de prise
+                    else
+                    {
+                        printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                        system("pause");
+                        system("cls");
+                        break;
+                    }
+                }
             }
+            break;
         }
-        // Entre 1 et 6
+            // Colonnes 3 à 6
         default:
         {
-            if( ( ( (td[x + 1][y].couleur == ' ') || (td[x + 1][y].couleur == jo) ) && ( (td[x][y - 1].couleur == ' ') || (td[x][y - 1].couleur == jo) ) )
-                || ( (!detectionColonneB(td, jo, x + 2, y) ) || (!detectionColonneH(td, jo, x - 2, y) ) ) )
+            // On regarde à gauche
+            for(j = y-1; j > -1; j--)
             {
-                return false;
+                // Si la case est vide, on arrête de vérifier à gauche
+                if(td[x][j].couleur == ' ')
+                {
+                    printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                    system("pause");
+                    system("cls");
+                    break;
+                }
+                else
+                {
+                    // Si le pion n'est de la même couleur, on continue la recherche
+                    if(td[x][j].couleur != jo)
+                    {
+                        continue;
+                    }
+                        // Le pion est de la même couleur, on peut manger à gauche
+                    else
+                    {
+                        jj = j-1;
+                        for(j = y-1; j > jj; j--)
+                        {
+                            td[x][j].couleur = jo;
+                        }
+                        break;
+                    }
+                }
             }
-            else
+            // On regarde à droite
+            for(j = y+1; j < 8; j++)
             {
-                return true;
+                // Si la case est vide, on arrête de vérifier à gauche
+                if(td[x][j].couleur == ' ')
+                {
+                    printf("Aucune prise possible, choisir d'autres coordonnees\n");
+                    system("pause");
+                    system("cls");
+                    break;
+                }
+                else
+                {
+                    // Si le pion n'est de la même couleur, on continue la recherche
+                    if(td[x][j].couleur != jo)
+                    {
+                        continue;
+                    }
+                        // Le pion est de la même couleur, on peut manger à gauche
+                    else
+                    {
+                        jj = j;
+                        for(j = y+1; j < jj; j++)
+                        {
+                            td[x][j].couleur = jo;
+                        }
+                        break;
+                    }
+                }
             }
         }
     }

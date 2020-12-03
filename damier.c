@@ -4,6 +4,10 @@
 
 #include "header.h"
 
+/**
+ * Initialisation des cases du jeu de l'Othello
+ * @param td, plateau de jeu
+ */
 void iniDamier(tabDamier td)
 {
     int i, j;
