@@ -2,7 +2,7 @@
 // Created by Guill on 15/10/2020.
 //
 
-#include "header.h"
+#include "../header.h"
 
 /**
  * Initialisation des cases du jeu de l'Othello

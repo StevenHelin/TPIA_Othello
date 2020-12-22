@@ -34,12 +34,17 @@ void affichageDamier(tabDamier td);
 
 /*----- deplacement.c -----*/
 
-int convLigne(int i);
+int convLigne(int *i);
 int convCharToInt(char c);
-void saisie(tabDamier td, char jo);
+void saisie(int *x, int *y);
+
+/*----- deplacement.c -----*/
+
+/*----- detection.c -----*/
+
 bool detectionLigne(tabDamier td, char jo, int x, int y);
 bool detectionColonne(tabDamier td, char jo, int x, int y);
 
-/*----- deplacement.c -----*/
+/*----- detection.c -----*/
 
 #endif //OTHELLO_HEADER_H
