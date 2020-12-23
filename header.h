@@ -10,8 +10,8 @@
 #include <process.h>
 
 /**
- * Structure pour les pions
- * Chaque pion possède un score et une couleur(B, N ou ' ')
+ * Structure pour les pions,
+ * chaque pion possède un score et une couleur(B, N ou ' ')
  */
 typedef struct
 {
@@ -20,8 +20,11 @@ typedef struct
 } Pion;
 
 /**
- * tadDamier représente le plateau de jeu de l'Othello
- * Il peut contenir des espaces vides, des pièces noires ou blanches
+ * tadDamier représente le plateau de jeu de l'Othello,
+ * il peut contenir les valeurs suivantes :
+ * @var ' '
+ * @var 'B'
+ * @var 'N'
  */
 typedef Pion tabDamier[8][8];
 
@@ -36,15 +39,20 @@ void affichageDamier(tabDamier td);
 
 int convLigne(int *i);
 int convCharToInt(char c);
-void saisie(int *x, int *y);
+void saisie(tabDamier td, int *x, int *y, int tour);
 
 /*----- deplacement.c -----*/
 
 /*----- detection.c -----*/
 
-bool detectionLigne(tabDamier td, char jo, int x, int y);
-bool detectionColonne(tabDamier td, char jo, int x, int y);
+int detection(tabDamier td,char jo, int x, int y);
 
 /*----- detection.c -----*/
+
+/*----- prise.c -----*/
+
+void priseSandwich(tabDamier td, int x, int y, int tour );
+
+/*----- prise.c -----*/
 
 #endif //OTHELLO_HEADER_H

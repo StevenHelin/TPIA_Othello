@@ -6,7 +6,7 @@
 
 /**
  * Initialisation des cases du jeu de l'Othello
- * @param td, plateau de jeu
+ * @param td : Plateau de jeu
  */
 void iniDamier(tabDamier td)
 {
@@ -76,7 +76,7 @@ void iniDamier(tabDamier td)
 
 /**
  * Affiche l'ensemble du damier td passé en paramètre
- * @param td, plateau de jeu
+ * @param td : Plateau de jeu
  */
 void affichageDamier(tabDamier td)
 {

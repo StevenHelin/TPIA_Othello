@@ -6,8 +6,8 @@
 
 /**
  * Met à jour la ligne souhaitée
- * @param i, ligne voulue par l'utilisateur
- * @return
+ * @param i : Ligne voulue par l'utilisateur
+ * @return temp : Nouvelle ligne
  */
 int convLigne(int *i)
 {
@@ -19,8 +19,8 @@ int convLigne(int *i)
 /**
  * Fonction qui convertie un caractère en entier
  * Utilisée pour les coordonnées de la colonne
- * @param c, le caractère à convertir
- * @return
+ * @param c : Caractère à convertir
+ * @return i : Entier correspondant à la colonne en fonction de c
  */
 int convCharToInt(char c)
 {
@@ -78,15 +78,24 @@ int convCharToInt(char c)
 /**
  * Procédure de saisie
  * Vérifie qu'on puisse bien placer le pion sur le damier
- * @param td
- * @param jo
+ * @param td : Plateau de jeu
+ * @param jo : Couleur du joueur actuel
  */
-void saisie(int *x, int *y)
+void saisie(tabDamier td, int *x, int *y, int tour)
 {
     char yc;
     bool valide = false;
     while(!valide)
     {
+        affichageDamier(td);
+        if(tour % 2 == 0)
+        {
+            printf("Tour des noirs !\n");
+        }
+        else
+        {
+            printf("Tour des blancs !\n");
+        }
         printf("Coordonnee ligne du pion a placer ? ");
         scanf("%d", x);
         printf("Coordonnee colonne du pion a placer ? ");
@@ -99,7 +108,6 @@ void saisie(int *x, int *y)
         {
             printf("Coordonnees en dehors du plateau, veuillez choisir d'autres coordonnees !\n");
             system("pause");
-            system("cls");
         }
         else
         {
