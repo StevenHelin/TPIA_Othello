@@ -5,7 +5,7 @@
 #include "../header.h"
 
 /**
- * Fonction qui permet de vérifier qu'on puisse bien placer un pion sur le damier en détectant dans toutes les directions
+ * @paragraph Fonction qui permet de vérifier qu'on puisse bien placer un pion sur le damier en détectant dans toutes les directions
  * @param td : Plateau de jeu
  * @param jo : Couleur du joueur actuel
  * @param x : Coordonnée ligne du pion qu'on veut placer
@@ -108,7 +108,7 @@ int detection(tabDamier td, char jo, int x, int y)
     }
     //verifie diagonale droite/haut
     i=1;
-    while (td[x+i][y-i].couleur!=jo && td[x-1][y-1].couleur!=' ' && y-i-1>=0 && x+i+1<8)
+    while (td[x+i][y-i].couleur!=jo && td[x+1][y-1].couleur!=' ' && y-i-1>=0 && x+i+1<8)
     {
         i++;
     }

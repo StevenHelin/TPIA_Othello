@@ -5,7 +5,7 @@
 #include "../header.h"
 
 /**
- * Met à jour la ligne souhaitée
+ * @paragraph Met à jour la ligne souhaitée
  * @param i : Ligne voulue par l'utilisateur
  * @return temp : Nouvelle ligne
  */
@@ -17,8 +17,8 @@ int convLigne(int *i)
 }
 
 /**
- * Fonction qui convertie un caractère en entier
- * Utilisée pour les coordonnées de la colonne
+ * @paragraph Fonction qui convertie un caractère en entier,
+ * utilisée pour les coordonnées de la colonne
  * @param c : Caractère à convertir
  * @return i : Entier correspondant à la colonne en fonction de c
  */
@@ -76,12 +76,17 @@ int convCharToInt(char c)
 }
 
 /**
- * Procédure de saisie
- * Vérifie qu'on puisse bien placer le pion sur le damier
+ * @paragraph Procédure de saisie,
+ * vérifie également qu'on puisse bien placer le pion sur le damier
  * @param td : Plateau de jeu
- * @param jo : Couleur du joueur actuel
+ * @param *x : Coordonnée ligne du pion
+ * @param *y : Coordonnée colonne du pion
+ * @param tour : Tour du jeu
+ * @param cv : Nombre de cases vides
+ * @param cb : Nombre de cases blanches
+ * @param cn : Nombre de cases noires
  */
-void saisie(tabDamier td, int *x, int *y, int tour)
+void saisie(tabDamier td, int *x, int *y, int tour, int cv, int cb, int cn)
 {
     char yc;
     bool valide = false;
@@ -90,19 +95,23 @@ void saisie(tabDamier td, int *x, int *y, int tour)
         affichageDamier(td);
         if(tour % 2 == 0)
         {
-            printf("Tour des noirs !\n");
+            printf("\nTour des noirs !\n\n");
         }
         else
         {
-            printf("Tour des blancs !\n");
+            printf("\nTour des blancs !\n\n");
         }
-        printf("Coordonnee ligne du pion a placer ? ");
-        scanf("%d", x);
-        printf("Coordonnee colonne du pion a placer ? ");
+        // Affiche le nombre de cases
+        printf("Noirs = %d, Blancs = %d\n\n", cn, cb);
+        printf("Il reste %d emplacement(s) de libre !\n\n", cv);
+        // Saisie des coordonnées
+        printf("Coordonnee ligne du pion a placer ?\n");
+        scanf(" %d", x);
+        printf("Coordonnee colonne du pion a placer ?\n");
         scanf(" %c", &yc);
         *x = convLigne(x);
         *y = convCharToInt(yc);
-        printf("Case voulue => Ligne %d, colonne %d\n", *x+1, *y+1);
+        // printf("Case voulue => Ligne %d, colonne %d\n", *x+1, *y+1);
         // Vérification que la case sélectionnée n'est pas en dehors du plateau
         if( (*x < 0) || (*x > 7) || (*y < 0 ) || (*y > 7) )
         {

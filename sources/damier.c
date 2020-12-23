@@ -5,7 +5,7 @@
 #include "../header.h"
 
 /**
- * Initialisation des cases du jeu de l'Othello
+ * @paragraph Initialisation des cases du jeu de l'Othello
  * @param td : Plateau de jeu
  */
 void iniDamier(tabDamier td)
@@ -75,21 +75,18 @@ void iniDamier(tabDamier td)
 }
 
 /**
- * Affiche l'ensemble du damier td passé en paramètre
+ * @paragraph Affiche l'ensemble du damier td passé en paramètre
  * @param td : Plateau de jeu
  */
 void affichageDamier(tabDamier td)
 {
-    /// on va afficher le tableau de type piece dans cette procedure on appellera la fonction précedente
-    int i, j, k;
-    k = 1;
-    system("cls");
-    for (i = 0; i < 8; i++)
+    int k = 1;
+    for (int i = 0; i < 8; i++)
     {
         printf("   +---+---+---+---+---+---+---+---+\n");
         printf(" %d | ",k);
         k++;
-        for(j = 0; j < 8; j++)
+        for(int j = 0; j < 8; j++)
         {
             printf("%c", td[i][j].couleur);
             printf(" | ");
@@ -101,3 +98,42 @@ void affichageDamier(tabDamier td)
 }
 
 //implementer une fonction de detection de coup possible pour voir si la partie continue
+/**
+ * @paragraph Fonction qui calcul le nombre de cases vides, blanches ou noires
+ * @param td : Plateau de jeu
+ * @param cv : Nombre de cases vides
+ * @param cb : Nombre de cases blanches
+ * @param cn : Nombre de cases noires
+ */
+void calculCases(tabDamier td, int *cv, int *cb, int *cn)
+{
+    int cvT = 0;
+    int cbT = 0;
+    int cnT = 0;
+    for(int i = 0; i < 8; i++)
+    {
+        for(int j = 0; j < 8; j++)
+        {
+            switch(td[i][j].couleur)
+            {
+                case 'B':
+                {
+                    cbT++;
+                    break;
+                }
+                case 'N':
+                {
+                    cnT++;
+                    break;
+                }
+                default:
+                {
+                    cvT++;
+                }
+            }
+        }
+    }
+    *cn = cnT;
+    *cb = cbT;
+    *cv = cvT;
+}

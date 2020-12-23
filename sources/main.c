@@ -2,19 +2,23 @@
 
 int main()
 {
-    int x, y, tour, continuer = 1;
+    int x, y, tour;
+    // Correspond aux nombres de cases
+    int cv, cn, cb;
     char jo;
     bool valide;
     tour = 0;
     jo = 'N';
     tabDamier td;
     iniDamier(td);
-    while(continuer == 1)
+    calculCases(td, &cv, &cb, &cn);
+    //printf("cv = %d, cn = %d, cb = %d\n", cv, cn, cb);
+    while(cv != 0)
     {
         valide = false;
         while(!valide)
         {
-            saisie(td, &x, &y, tour);
+            saisie(td, &x, &y, tour, cv, cb, cn);
             /*
             printf("x = %d\n", x);
             printf("y = %d\n", y);
@@ -30,10 +34,10 @@ int main()
                 system("pause");
             }
         }
-        printf("Continuer ?\n");
-        scanf("%d", &continuer);
-        if(continuer == 1)
+        calculCases(td, &cv, &cb, &cn);
+        if(cv != 0)
         {
+            calculCases(td, &cv, &cb, &cn);
             tour = (tour + 1) % 2;
             if(tour == 0)
             {
@@ -44,7 +48,25 @@ int main()
                 jo = 'B';
             }
         }
+        else
+        {
+            affichageDamier(td);
+            printf("\nLa partie est terminee !\n");
+            printf("\n----- SCORES -----\n");
+            printf("\n Noirs = %d, Blancs = %d\n", cn, cb);
+            if(cn > cb)
+            {
+                printf("\nVictoire des noirs !\n");
+            }
+            else if(cn < cb)
+            {
+                printf("\nVictoire des blancs !\n");
+            }
+            else
+            {
+                printf("\nEgalite !\n");
+            }
+        }
     }
-    affichageDamier(td);
     return 0;
 }

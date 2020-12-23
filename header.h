@@ -9,8 +9,10 @@
 #include <stdbool.h>
 #include <process.h>
 
+/*----- STRUCTURES -----*/
+
 /**
- * Structure pour les pions,
+ * @paragraph Structure pour les pions,
  * chaque pion possède un score et une couleur(B, N ou ' ')
  */
 typedef struct
@@ -20,7 +22,7 @@ typedef struct
 } Pion;
 
 /**
- * tadDamier représente le plateau de jeu de l'Othello,
+ * @paragraph tadDamier représente le plateau de jeu de l'Othello,
  * il peut contenir les valeurs suivantes :
  * @var ' '
  * @var 'B'
@@ -28,10 +30,13 @@ typedef struct
  */
 typedef Pion tabDamier[8][8];
 
+/*----- STRUCTURES -----*/
+
 /*----- damier.c -----*/
 
 void iniDamier(tabDamier td);
 void affichageDamier(tabDamier td);
+void calculCases(tabDamier td, int *cv, int *cb, int *cn);
 
 /*----- damier.c -----*/
 
@@ -39,7 +44,7 @@ void affichageDamier(tabDamier td);
 
 int convLigne(int *i);
 int convCharToInt(char c);
-void saisie(tabDamier td, int *x, int *y, int tour);
+void saisie(tabDamier td, int *x, int *y, int tour, int cv, int cb, int cn);
 
 /*----- deplacement.c -----*/
 
