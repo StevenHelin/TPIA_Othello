@@ -1,3 +1,10 @@
+/**
+ * HELIN Steven
+ * DEWAGHE Guillaume
+ * TP d'IA
+ * M1TNSID
+ */
+
 #include "../header.h"
 
 int main()
@@ -23,11 +30,13 @@ int main()
             printf("x = %d\n", x);
             printf("y = %d\n", y);
             */
+            // Coup valide
             if(detection(td, jo, x, y) == 1)
             {
                 valide = true;
                 priseSandwich(td, x, y, tour);
             }
+            // Coup non valide
             else
             {
                 printf("Impossible de placer le pion, veuillez choisir d'autres coordonnees !\n");
@@ -35,6 +44,7 @@ int main()
             }
         }
         calculCases(td, &cv, &cb, &cn);
+        // La partie continue
         if(cv != 0)
         {
             calculCases(td, &cv, &cb, &cn);
@@ -48,6 +58,7 @@ int main()
                 jo = 'B';
             }
         }
+        // Fin de la partie
         else
         {
             affichageDamier(td);

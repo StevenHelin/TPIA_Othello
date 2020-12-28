@@ -3,4 +3,4 @@ project(Othello C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(Othello sources/main.c sources/damier.c header.h sources/deplacement.c sources/detection.c sources/prise.c)
+add_executable(Othello sources/main.c sources/damier.c header.h sources/deplacement.c sources/detection.c sources/prise.c sources/IA.c)

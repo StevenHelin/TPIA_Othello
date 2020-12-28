@@ -1,6 +1,9 @@
-//
-// Created by Guill on 05/11/2020.
-//
+/**
+ * HELIN Steven
+ * DEWAGHE Guillaume
+ * TP d'IA
+ * M1TNSID
+ */
 
 #ifndef OTHELLO_HEADER_H
 #define OTHELLO_HEADER_H
@@ -8,6 +11,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <process.h>
+#include <limits.h>
 
 /*----- STRUCTURES -----*/
 
@@ -24,11 +28,18 @@ typedef struct
 /**
  * @paragraph tadDamier représente le plateau de jeu de l'Othello,
  * il peut contenir les valeurs suivantes :
- * @var ' '
- * @var 'B'
- * @var 'N'
+ * @var ' ', 'B', 'N'
  */
 typedef Pion tabDamier[8][8];
+
+/**
+ * @paragraph Liste correspondant aux noeuds pour l'IA
+ */
+typedef struct _Noeud
+{
+    int score;
+    struct _Noeud *suiv;
+} Noeud;
 
 /*----- STRUCTURES -----*/
 
@@ -59,5 +70,14 @@ int detection(tabDamier td,char jo, int x, int y);
 void priseSandwich(tabDamier td, int x, int y, int tour );
 
 /*----- prise.c -----*/
+
+/*----- IA.c -----*/
+
+int evaluer(Noeud n);
+bool estTerminal(Noeud n);
+int maxValue(Noeud n);
+int minValue(Noeud n);
+
+/*----- IA.c -----*/
 
 #endif //OTHELLO_HEADER_H

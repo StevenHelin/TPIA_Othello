@@ -1,6 +1,9 @@
-//
-// Created by Guill on 22/12/2020.
-//
+/**
+ * HELIN Steven
+ * DEWAGHE Guillaume
+ * TP d'IA
+ * M1TNSID
+ */
 
 #include "../header.h"
 
