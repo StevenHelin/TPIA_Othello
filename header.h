@@ -12,6 +12,7 @@
 #include <stdbool.h>
 #include <process.h>
 #include <limits.h>
+#include <stdlib.h>
 
 /*----- STRUCTURES -----*/
 
@@ -32,15 +33,38 @@ typedef struct
  */
 typedef Pion tabDamier[8][8];
 
+
 /**
  * @paragraph Liste correspondant aux noeuds pour l'IA
  */
-typedef struct _Noeud
-{
-    int score;
-    struct _Noeud *suiv;
-} Noeud;
+typedef struct Noeud Noeud;
+typedef struct Fils Fils;
+typedef struct Coord Coord;
 
+struct Coord{
+    int x;
+    int y;
+};
+
+typedef Coord CoupJouable[64];
+
+
+struct Noeud
+{
+    tabDamier damier;
+    CoupJouable coup;
+    int score;
+    struct Noeud *suiv;
+    Fils* succ;
+};
+
+
+
+struct  Fils
+{
+    Noeud* succ;
+    struct Fils *suiv;
+};
 /*----- STRUCTURES -----*/
 
 /*----- damier.c -----*/

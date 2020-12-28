@@ -7,46 +7,33 @@
 
 #include "../header.h"
 
-/**
- * @paragraph Va vérifer les cases de score du tableau pour le meilleur coup possible
- * @param n
- * @return
- */
-int evaluer(Noeud n)
-{
-    return 1;
-}
-
-/**
- * @paragraph Vérifie que le noeud est terminal ou non
- * @param n
- * @return true => c'est le cas
- * @return false => ce n'est pas le cas
- */
-bool estTerminal(Noeud n)
-{
-    return false;
-}
-
-int maxValue(Noeud n)
-{
-    int v;
-    int n2;
-    if(estTerminal(n) )
-    {
-        return evaluer(n);
+Noeud Creation (tabDamier damier){
+    Noeud* nouveau;
+    nouveau = (Noeud*) malloc (sizeof(Noeud));
+    if(nouveau){
+        for (int i=0;i<=64;i++){
+            for(int j=0;j<=64;j++){
+                nouveau->damier[i][j]=damier[i][j];
+            }
+        }
     }
-    v = INT_MIN;
-    for(n2 = 0; n2 < 10; n2++)
-    {
-        v = max(v, min)
-    }
-    return v;
+
 }
 
-int minValue(Noeud n)
-{
-    int v;
-    return v;
-}
-
+CoupJouable
+/**function minimax(node, depth, maximizingPlayer) is
+if depth = 0 or node is a terminal node then
+return the heuristic value of node
+if maximizingPlayer then
+value := −∞
+for each child of node do
+value := max(value, minimax(child, depth − 1, FALSE))
+return value
+else (* minimizing player *)
+value := +∞
+for each child of node do
+value := min(value, minimax(child, depth − 1, TRUE))
+return value
+(* Initial call *)
+minimax(origin, depth, TRUE)
+**/
