@@ -44,8 +44,19 @@ Fils instancier(){
 }
 
 // fonction qui permet de detecter si tour passé ou si victoire
-int condition(){
-
+int condition(CoupJouable cj){
+int verif =0;
+int cpt=0;
+for(int i=0;i<=64;i++){
+    if(cj[i].x==0&&cj[i].y==0){
+       cpt++;
+    }
+}
+//cas ou l ia ne peut pas jouer (passe son tour)
+if (cpt==64){
+    verif =1;
+    return verif;
+}
 }
 
 //fonction qui permet la creation d'un fils avec le coup joué
