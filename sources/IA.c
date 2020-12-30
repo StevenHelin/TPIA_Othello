@@ -20,7 +20,39 @@ Noeud Creation (tabDamier damier){
 
 }
 
-CoupJouable
+void detectionPossible (tabDamier damier){
+    CoupJouable cj;
+    char jo= 'B';
+    int possible=0;
+    int k=0;
+    for (int  i = 0; i<=64 ;i++ ) {
+        for (int j=0;j<=64;j++){
+            possible = detection(damier,jo,i,j);
+            if (possible==1){
+                cj[k].x=i;
+                cj[k].y=j;
+              }
+            possible=0;
+            k++;
+        }
+    }
+}
+
+//fonction qui permet d'instancier un fils
+Fils instancier(){
+
+}
+
+// fonction qui permet de detecter si tour passé ou si victoire
+int condition(){
+
+}
+
+//fonction qui permet la creation d'un fils avec le coup joué
+Fils creation(tabDamier damier,int tour,CoupJouable cj){
+    priseSandwich(damier,cj->x,cj->y,tour);
+
+}
 /**function minimax(node, depth, maximizingPlayer) is
 if depth = 0 or node is a terminal node then
 return the heuristic value of node
