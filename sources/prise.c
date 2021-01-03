@@ -27,7 +27,7 @@ void priseSandwich(tabDamier td, int x, int y, int tour)
    td[x][y].couleur=couleur; //on pose le pion
 
    //droite
-   while (td[x+i][y].couleur!=couleur && x+i+1<8)
+   while (td[x+i][y].couleur!=couleur && td[x+i][y].couleur!=' '&& x+i+1<8)
    {
        i++;
    }
@@ -50,7 +50,7 @@ void priseSandwich(tabDamier td, int x, int y, int tour)
 
    //gauche
    i=1;
-   while (td[x-i][y].couleur!=couleur && x-i-1>=0)
+   while (td[x-i][y].couleur!=couleur && td[x-i][y].couleur!=' ' && x-i-1>=0)
    {
        i++;
    }
@@ -74,7 +74,7 @@ void priseSandwich(tabDamier td, int x, int y, int tour)
 
    // haut
    i=1;
-   while (td[x][y-i].couleur!=couleur && y-i-1>=0)
+   while (td[x][y-i].couleur!=couleur && td[x][y-i].couleur!=' ' && y-i-1>=0)
    {
        i++;
    }
@@ -98,7 +98,7 @@ void priseSandwich(tabDamier td, int x, int y, int tour)
 
    // bas
    i=1;
-   while (td[x][y+i].couleur!=couleur && y+i+1<8)
+   while (td[x][y+i].couleur!=couleur && td[x][y+i].couleur!=' ' && y+i+1<8)
    {
        i++;
    }
@@ -122,7 +122,7 @@ void priseSandwich(tabDamier td, int x, int y, int tour)
 
    //diago droite/bas
    i=1;
-   while (td[x+i][y+i].couleur!=couleur && y+i+1<8 && x+i+1<8)
+   while (td[x+i][y+i].couleur!=couleur && td[x+i][y+i].couleur!=' ' && y+i+1<8 && x+i+1<8)
    {
        i++;
    }
@@ -146,7 +146,7 @@ void priseSandwich(tabDamier td, int x, int y, int tour)
 
    //diago gauche/bas
    i=1;
-   while (td[x-i][y+i].couleur!=couleur && y+i+1<8 && x-i-1>=0)
+   while (td[x-i][y+i].couleur!=couleur && td[x-i][y+i].couleur!=' ' && y+i+1<8 && x-i-1>=0)
    {
        i++;
    }
@@ -170,7 +170,7 @@ void priseSandwich(tabDamier td, int x, int y, int tour)
 
    //diago gauche/haut
    i=1;
-   while (td[x-i][y-i].couleur!=couleur && y-i-1>=0 && x-i-1>=0)
+   while (td[x-i][y-i].couleur!=couleur && td[x-i][y-i].couleur!=' ' && y-i-1>=0 && x-i-1>=0)
    {
         i++;
    }
@@ -194,7 +194,7 @@ void priseSandwich(tabDamier td, int x, int y, int tour)
 
    //diago droite/haut
    i=1;
-   while (td[x+i][y-i].couleur!=couleur && y-i-1>=0 && x+i+1<8)
+   while (td[x+i][y-i].couleur!=couleur && td[x+i][y-i].couleur!=' ' && y-i-1>=0 && x+i+1<8)
    {
        i++;
    }

@@ -97,11 +97,16 @@ void priseSandwich(tabDamier td, int x, int y, int tour );
 
 /*----- IA.c -----*/
 
-int evaluer(Noeud n);
-bool estTerminal(Noeud n);
-int maxValue(Noeud n);
-int minValue(Noeud n);
+Noeud* Creation (tabDamier damier);
+int detectionPossible (tabDamier damier, CoupJouable cj,char jo);
+Fils* instancier();
+Noeud* creationf(tabDamier damier,int tour,CoupJouable cj, int indice);
+Coord meilleurCoup (Noeud* n);
+int min(Fils* fils);
+int max(Fils* fils);
+Noeud* IA (tabDamier damier,CoupJouable cj, char jo, int tour, char couleur,int profondeur,int indice);
+Coord meilleurCoup (Noeud* n);
+
 
 /*----- IA.c -----*/
-
 #endif //OTHELLO_HEADER_H
