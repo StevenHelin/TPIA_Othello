@@ -24,6 +24,7 @@ int main()
     tabDamier td;
     CoupJouable cj;
     iniDamier(td);
+    int a;
     printf("entrez votre choix 1:Humain vs humain 2:humain vs IA 3:IA vs IA \n");
     scanf("%d",&choix);
     switch(choix){
@@ -176,6 +177,12 @@ int main()
                     affichageDamier(td);
                     if (jo=='N') {
                         nouveau = IA(td, cj, 'B', tour, jo, 0, -1);
+                        /*a=detectionPossible (td,cj,jo);
+                        for (int i = 0; i < 64; i++) {
+                            if (cj[i].x!=-1){
+                                printf("%d %d\n",cj[i].x,cj[i].y);
+                            }
+                        }*/
                         c = meilleurCoup(nouveau);
                         if (c.x != -1) {
                             priseSandwich(td, c.x, c.y, tour);
@@ -186,6 +193,12 @@ int main()
                     }
                     else {
                         nouveau = IA(td, cj, 'N', tour, jo, 0, -1);
+                        /*a=detectionPossible (td,cj,jo);
+                        for (int i = 0; i < 64; i++) {
+                            if (cj[i].x!=-1){
+                                printf("%d %d\n",cj[i].x,cj[i].y);
+                            }
+                        }*/
                         c = meilleurCoup(nouveau);
                         if (c.x != -1) {
                             priseSandwich(td, c.x, c.y, tour);
